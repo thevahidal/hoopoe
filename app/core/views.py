@@ -11,8 +11,8 @@ class Timestamp(ViewSet):
         )
 
 
-class Echo(ViewSet):
-    def retrieve(self, request, *args, **kwargs):
+class Dispatch(ViewSet):
+    def create(self, request, *args, **kwargs):
         return Response(
             {
                 "timestamp": datetime.datetime.now(),

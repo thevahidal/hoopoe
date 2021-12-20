@@ -1,9 +1,9 @@
 from django.urls import path
 
-from core.views import Echo, Timestamp
+from core.views import Dispatch, Timestamp
 
 urlpatterns = [
+    path('dispatch/', Dispatch.as_view({"post": "create"}), name='dispatch'),
     
-    path('echo/', Echo.as_view({"get": "retrieve"}), name='echo'),
     path('timestamp/', Timestamp.as_view({"get": "retrieve"}), name='timestamps'),
 ]
