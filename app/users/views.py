@@ -55,7 +55,6 @@ class OrganizationView(ModelViewSet):
                 "data": {
                     **serializer.data,
                     "api_key": key,
-                    "id": api_key.id
                 }
             },
             status=status.HTTP_201_CREATED,

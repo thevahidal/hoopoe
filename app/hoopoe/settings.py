@@ -28,7 +28,7 @@ SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config("DJANGO_ALLOWED_HOSTS", default="", cast=lambda v: v.split(" "))
 
 
 # Application definition
@@ -85,8 +85,15 @@ WSGI_APPLICATION = "hoopoe.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": config("SQL_ENGINE", "django.db.backends.postgresql"),
+        "NAME": config("SQL_DATABASE", "hoopoe_dev"),
+        "USER": config("SQL_USER", "hoopoe"),
+        "PASSWORD": config("SQL_PASSWORD", "hoopoe"),
+        "HOST": config("SQL_HOST", "localhost"),
+        "PORT": config("SQL_PORT", "5432"),
+        "TEST": {
+            "MIRROR": "default",
+        },
     }
 }
 
@@ -148,8 +155,6 @@ SERVER_EMAIL = EMAIL_HOST_USER
 EMAIL_PORT = config("EMAIL_PORT", default=587, cast=int)
 EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=False, cast=bool)
 
-EMAIL_RECIPIENTS = config("EMAIL_RECIPIENTS", default="", cast=lambda v: v.split(","))
-
 EMAIL_UPUPA_USER = config("EMAIL_UPUPA_USER")
 EMAIL_UPUPA_PASSWORD = config("EMAIL_UPUPA_PASSWORD")
 
@@ -160,4 +165,30 @@ API_KEY_CUSTOM_HEADER = "HTTP_X_API_KEY"
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=5) if not DEBUG else datetime.timedelta(days=5),
     'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=1) if not DEBUG else datetime.timedelta(weeks=4),
+}
+
+
+
+# CELERY STUFF
+REDIS_BROKER_URL = "redis://" + config("REDIS_HOST") + ":" + config("REDIS_PORT")
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": REDIS_BROKER_URL,
+    }
+}
+
+
+CELERY_BROKER_URL = REDIS_BROKER_URL
+CELERY_RESULT_BACKEND = REDIS_BROKER_URL
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = "Asia/Tehran"
+CELERY_TRANSPORT_OPTIONS = {
+    "fanout_prefix": True,
+    "fanout_patterns": True,
+    "socket_timeout": 10,        
+    "visibility_timeout": 10,
 }
