@@ -1,0 +1,3 @@
+{{ timestamp }}
+{{ message }}
+{{ extra | pprint }}
