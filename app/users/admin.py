@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from rest_framework_api_key.admin import APIKeyModelAdmin
 
-from users.models import Organization, OrganizationAPIKey
+from users.models import Driver, Organization, OrganizationAPIKey, Recipient
 
 
 @admin.register(OrganizationAPIKey)
@@ -20,3 +20,32 @@ class OrganizationAdmin(admin.ModelAdmin):
         "created_at",
     ]
     list_filter = []
+
+
+@admin.register(Recipient)
+class RecipientTypeAdmin(admin.ModelAdmin):
+    readonly_fields = ["created_at", "updated_at"]
+    list_display = [
+        "name",
+        "organization",
+        "active",
+        "created_at",
+    ]
+    list_filter = []
+
+
+@admin.register(Driver)
+class DriverAdmin(admin.ModelAdmin):
+    readonly_fields = ["created_at", "updated_at"]
+    list_display = [
+        "recipient",
+        "organization",
+        "type",
+        "username",
+        "active",
+        "created_at",
+    ]
+    list_filter = []
+    
+    def organization(self, obj):
+        return obj.recipient.organization
