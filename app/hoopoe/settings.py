@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os
 from pathlib import Path
+import datetime
 
 from decouple import config
 
@@ -39,11 +40,14 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    
     "rest_framework",
+    "rest_framework.authtoken",
     "django_extensions",
-    
+    "rest_framework_simplejwt",
+    "rest_framework_simplejwt.token_blacklist",
+    "rest_framework_api_key",
     "core.apps.CoreConfig",
+    "users.apps.UsersConfig",
 ]
 
 MIDDLEWARE = [
@@ -61,7 +65,7 @@ ROOT_URLCONF = "hoopoe.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR, 'templates')],
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -75,7 +79,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "hoopoe.wsgi.application"
-
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
@@ -131,6 +134,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
     "DEFAULT_VERSIONING_CLASS": "rest_framework.versioning.NamespaceVersioning",
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ],
 }
 
 
@@ -142,7 +148,16 @@ SERVER_EMAIL = EMAIL_HOST_USER
 EMAIL_PORT = config("EMAIL_PORT", default=587, cast=int)
 EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=False, cast=bool)
 
-EMAIL_RECIPIENTS=config("EMAIL_RECIPIENTS", default="", cast=lambda v: v.split(","))
+EMAIL_RECIPIENTS = config("EMAIL_RECIPIENTS", default="", cast=lambda v: v.split(","))
 
-EMAIL_UPUPA_USER=config("EMAIL_UPUPA_USER")
-EMAIL_UPUPA_PASSWORD=config("EMAIL_UPUPA_PASSWORD")
+EMAIL_UPUPA_USER = config("EMAIL_UPUPA_USER")
+EMAIL_UPUPA_PASSWORD = config("EMAIL_UPUPA_PASSWORD")
+
+
+API_KEY_CUSTOM_HEADER = "HTTP_X_API_KEY"
+
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=5) if not DEBUG else datetime.timedelta(days=5),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=1) if not DEBUG else datetime.timedelta(weeks=4),
+}

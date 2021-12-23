@@ -10,8 +10,11 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.response import Response
 from rest_framework.renderers import TemplateHTMLRenderer
 
-from core.serializers import UpupaSerializer
+from rest_framework_api_key.permissions import HasAPIKey
 
+from users.models import OrganizationAPIKey
+
+from core.serializers import UpupaSerializer
 
 class Timestamp(GenericViewSet):
     def retrieve(self, request, *args, **kwargs):
@@ -32,8 +35,14 @@ class Timestamp(GenericViewSet):
 
 class Upupa(GenericViewSet):
     serializer_class = UpupaSerializer
+    # permission_classes = [HasAPIKey]
 
     def create(self, request, *args, **kwargs):
+        
+        key = request.META["HTTP_X_API_KEY"].split()[1]
+        api_key = OrganizationAPIKey.objects.get_from_key(key)
+        
+        
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -67,7 +76,7 @@ class Upupa(GenericViewSet):
             password=settings.EMAIL_UPUPA_PASSWORD, 
         ) as connection:
             message = EmailMultiAlternatives(
-                subject=message,
+                subject="New Notification: " + message,
                 body=plain_message,
                 from_email=settings.EMAIL_UPUPA_USER,
                 to=settings.EMAIL_RECIPIENTS,
@@ -78,8 +87,10 @@ class Upupa(GenericViewSet):
 
         return Response(
             {
-                "message": "Email sent successfully.",
+                "message": "Upupa sent successfully.",
                 "error": None,
-                "payload": {},
+                "payload": {
+                    "organization": api_key.organization.name
+                },
             }
         )
