@@ -19,7 +19,8 @@ class Organization(models.Model):
     name = models.CharField(max_length=128)
     slug = models.CharField(max_length=128)
     active = models.BooleanField(default=True)
-
+    metadata = models.JSONField(default=dict)
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -46,6 +47,7 @@ class Recipient(models.Model):
         related_name="recipients",
     )
     name = models.CharField(max_length=128)
+    username = models.CharField(max_length=128)
     active = models.BooleanField(default=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
@@ -54,11 +56,16 @@ class Recipient(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        unique_together = ("organization", "username")
 
 class Driver(models.Model):
     EMAIL = 0
+    TELEGRAM = 1
+    
     TYPES = [
         (EMAIL, 'EMAIL'),
+        (TELEGRAM, 'TELEGRAM'),
         
     ]
     
@@ -70,12 +77,12 @@ class Driver(models.Model):
     type = models.IntegerField(
         choices=TYPES, default=0
     )
-    username = models.CharField(max_length=256)
+    account_id = models.CharField(max_length=256)
     active = models.BooleanField(default=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
  
     def __str__(self):
-        return self.username
+        return self.account_id
 

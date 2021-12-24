@@ -41,7 +41,7 @@ class DriverAdmin(admin.ModelAdmin):
         "recipient",
         "organization",
         "type",
-        "username",
+        "account_id",
         "active",
         "created_at",
     ]

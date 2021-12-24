@@ -4,7 +4,7 @@ from hoopoe.celery import app
 
 from users.models import Driver, Organization
 
-from core.utils import handle_send_email
+from core.drivers import email_driver, telegram_driver
 
 @app.task
 def handle_send_upupa(organization_id, context):
@@ -15,6 +15,8 @@ def handle_send_upupa(organization_id, context):
         drivers = recipient.drivers
 
         for driver in drivers.all():
-
             if driver.type == Driver.EMAIL:
-               handle_send_email(organization, context, driver)
+               email_driver(organization, context, driver)
+            if driver.type == Driver.TELEGRAM:
+               telegram_driver(organization, context, driver)
+                
