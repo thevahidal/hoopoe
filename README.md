@@ -1,6 +1,6 @@
 <h1 align="center">
   <a href="https://github.com/thevahidal/hoopoe-core">
-    <img src="docs/images/logo.png" alt="Logo" height="125">
+    <img src="docs/images/logo.png" alt="Logo">
   </a>
 </h1>
 
