@@ -10,3 +10,4 @@ celery==5.2.1
 django-redis==5.2.0
 redis==4.0.2
 python-telegram-bot==13.9
+shortuuid==1.0.8
