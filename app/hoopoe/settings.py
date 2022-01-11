@@ -85,12 +85,12 @@ WSGI_APPLICATION = "hoopoe.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": config("SQL_ENGINE", "django.db.backends.postgresql"),
-        "NAME": config("SQL_DATABASE", "hoopoe_dev"),
-        "USER": config("SQL_USER", "hoopoe"),
-        "PASSWORD": config("SQL_PASSWORD", "hoopoe"),
-        "HOST": config("SQL_HOST", "localhost"),
-        "PORT": config("SQL_PORT", "5432"),
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config("POSTGRES_DB", "hoopoe"),
+        "USER": config("POSTGRES_USER", "hoopoe"),
+        "PASSWORD": config("POSTGRES_PASSWORD", "hoopoe"),
+        "HOST": config("POSTGRES_HOST", "localhost"),
+        "PORT": config("POSTGRES_PORT", "5432"),
         "TEST": {
             "MIRROR": "default",
         },
@@ -130,9 +130,14 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.0/howto/static-files/
+# https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/staticfiles/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles/")
+# STATICFILES_DIRS = (os.path.join(BASE_DIR, "staticfiles"),)
+
+MEDIA_URL = "/mediafiles/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

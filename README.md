@@ -153,12 +153,11 @@ As mentioned in manual setup section, you need to duplicate ```.env_```, rename 
 | EMAIL_UPUPA_USER           | None (upupa@example.com)      | We use this email to send notifications      |
 | EMAIL_UPUPA_PASSWORD       | None                          | Password for previous email                  |
 | DJANGO_ALLOWED_HOSTS       | localhost 127.0.0.1 [::1]     | Django allowed hosts (Space separated)       |
-| SQL_ENGINE                 | django.db.backends.postgresql | DB Engine                                    |
-| SQL_DATABASE               | hoopoe_dev                    | DB Name                                      |
-| SQL_USER                   | hoopoe                        | DB User                                      |
-| SQL_PASSWORD               | hoopoe                        | DB User Password                             |
-| SQL_HOST                   | localhost                     | DB Host                                      |
-| SQL_PORT                   | 5432                          | DB Port                                      |
+| POSTGRES_DB               | hoopoe                    | DB Name                                      |
+| POSTGRES_USER                   | hoopoe                        | DB User                                      |
+| POSTGRES_PASSWORD               | hoopoe                        | DB User Password                             |
+| POSTGRES_HOST                   | localhost                     | DB Host                                      |
+| POSTGRES_PORT                   | 5432                          | DB Port                                      |
 | REDIS_HOST                 | localhost                     | Redis Host                                   |
 | REDIS_PORT                 | 6379                          | Redis Port                                   |
 
