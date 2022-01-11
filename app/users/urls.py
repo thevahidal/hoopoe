@@ -17,6 +17,10 @@ urlpatterns = [
     
     
     path('organizations/', OrganizationView.as_view({
-        "post": "create"
-    }), name="organizations-view")
+        "post": "create",
+        "get": "list",
+    }), name="organizations-view"),
+    path('organizations/<str:uuid>/', OrganizationView.as_view({
+        "patch": "partial_update",
+    }), name="organizations-details-view")
 ]

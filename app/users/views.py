@@ -1,12 +1,14 @@
 from django.contrib.auth.models import User
 
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAuthenticated
+
+from hoopoe.permissions import IsOwnerOrReadonly
 
 from users.models import Organization, OrganizationAPIKey
-from users.serializers import OrganizationSerializer, RegisterSerializer
+from users.serializers import OrganizationSerializer, RegisterSerializer, UpdateOrganizationSerializer
 from users.utils import get_tokens_for_user
 
 
@@ -37,7 +39,14 @@ class RegisterView(ModelViewSet):
 class OrganizationView(ModelViewSet):
     queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated & IsOwnerOrReadonly]
+    lookup_field = "uuid"
+    
+    def get_serializer_class(self):
+        if self.action in ["update", "partial_update"]:
+            return UpdateOrganizationSerializer
+        else:
+            return OrganizationSerializer
 
     def create(self, request, *args, **kwargs):
         data = request.data.copy()
@@ -59,3 +68,7 @@ class OrganizationView(ModelViewSet):
             },
             status=status.HTTP_201_CREATED,
         )
+
+    def get_queryset(self):
+        queryset = self.queryset.filter(user=self.request.user)
+        return queryset
