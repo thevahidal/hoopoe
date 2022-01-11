@@ -16,7 +16,7 @@ services:
     depends_on:
       - db
     networks:
-      - local_network
+      - local
 
   db:
     image: postgres:13.0-alpine
@@ -26,7 +26,7 @@ services:
     env_file:
       - .env.prod
     networks:
-      - local_network
+      - local
 
   celery:
     build:
@@ -43,7 +43,7 @@ services:
       - db
       - redis
     networks:
-      - local_network
+      - local
 
   celery-beat:
     build:
@@ -60,7 +60,7 @@ services:
       - db
       - redis
     networks:
-      - local_network
+      - local
   
   nginx:
     build: ./nginx
@@ -72,7 +72,7 @@ services:
     depends_on:
       - app
     networks:
-      - local_network
+      - local
 
   redis:
     restart: always
@@ -82,7 +82,7 @@ services:
     volumes:
       - redis_data:/data
     networks:
-      - local_network
+      - local
 
 volumes:
   postgres_data:
@@ -92,4 +92,4 @@ volumes:
 
 
 networks:
-  local_network:
+  local:
