@@ -13,7 +13,13 @@ import os
 from pathlib import Path
 import datetime
 
+import logging
 from decouple import config
+import sentry_sdk
+from sentry_sdk.integrations.celery import CeleryIntegration
+from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.logging import LoggingIntegration
+from sentry_sdk.integrations.redis import RedisIntegration
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,6 +35,7 @@ SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", default=False, cast=bool)
 
 ALLOWED_HOSTS = config("DJANGO_ALLOWED_HOSTS", default="", cast=lambda v: v.split(" "))
+CSRF_TRUSTED_ORIGINS = ALLOWED_HOSTS
 
 
 # Application definition
@@ -197,3 +204,27 @@ CELERY_TRANSPORT_OPTIONS = {
     "socket_timeout": 10,        
     "visibility_timeout": 10,
 }
+
+
+SENTRY_DSN = config("SENTRY_DSN", default="")
+if SENTRY_DSN:
+    SENTRY_LOG_LEVEL = config("SENTRY_LOG_LEVEL", default=logging.INFO, cast=int)
+
+    sentry_logging = LoggingIntegration(
+        level=SENTRY_LOG_LEVEL,  # Capture info and above as breadcrumbs
+        event_level=logging.ERROR,  # Send errors as events
+    )
+    integrations = [
+        sentry_logging,
+        DjangoIntegration(),
+        CeleryIntegration(),
+        RedisIntegration(),
+    ]
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=integrations,
+        environment=config("SENTRY_ENVIRONMENT", default="prod"),
+        traces_sample_rate=config("SENTRY_TRACES_SAMPLE_RATE", default=1.0, cast=float),
+        release="hoopoe-core@latest",
+        send_default_pii=True,
+    )
