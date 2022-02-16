@@ -153,12 +153,12 @@ if USE_S3:
     # s3 static settings
     STATIC_LOCATION = 'static'
     STATIC_URL = f'{AWS_S3_ENDPOINT_URL}/{STATIC_LOCATION}/'
-    STATICFILES_STORAGE = 'social_trader.storage_backends.StaticStorage'
+    STATICFILES_STORAGE = 'hoopoe.storage_backends.StaticStorage'
     
     # s3 public media settings
     PUBLIC_MEDIA_LOCATION = 'media'
     MEDIA_URL = f'{AWS_S3_ENDPOINT_URL}/{PUBLIC_MEDIA_LOCATION}/'
-    DEFAULT_FILE_STORAGE = 'social_trader.storage_backends.PublicMediaStorage'
+    DEFAULT_FILE_STORAGE = 'hoopoe.storage_backends.PublicMediaStorage'
 else:
     STATIC_URL = '/staticfiles/'
     STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

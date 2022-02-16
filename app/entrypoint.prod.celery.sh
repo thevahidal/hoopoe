@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-celery -A social_trader worker -l info
+celery -A hoopoe worker -l info
