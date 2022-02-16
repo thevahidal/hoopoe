@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
+from email.policy import default
 import os
 from pathlib import Path
 import datetime
@@ -35,11 +36,10 @@ SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", default=False, cast=bool)
 
 ALLOWED_HOSTS = config("DJANGO_ALLOWED_HOSTS", default="", cast=lambda v: v.split(" "))
-CSRF_TRUSTED_ORIGINS = ALLOWED_HOSTS
+# CSRF_TRUSTED_ORIGINS = ALLOWED_HOSTS
 
 
 # Application definition
-
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -47,14 +47,19 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
     "rest_framework",
     "rest_framework.authtoken",
+
     "django_extensions",
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
     "rest_framework_api_key",
+
     "core.apps.CoreConfig",
     "users.apps.UsersConfig",
+    
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -135,16 +140,34 @@ USE_I18N = True
 
 USE_TZ = True
 
+USE_S3 = config('USE_S3', default=False, cast=bool)
+if USE_S3:
+    # aws settings
+    AWS_ACCESS_KEY_ID = config('S3_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = config('S3_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = config('S3_STORAGE_BUCKET_NAME')
+    AWS_S3_ENDPOINT_URL = config('S3_ENDPOINT_URL')
+    AWS_DEFAULT_ACL = None
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+    
+    # s3 static settings
+    STATIC_LOCATION = 'static'
+    STATIC_URL = f'{AWS_S3_ENDPOINT_URL}/{STATIC_LOCATION}/'
+    STATICFILES_STORAGE = 'social_trader.storage_backends.StaticStorage'
+    
+    # s3 public media settings
+    PUBLIC_MEDIA_LOCATION = 'media'
+    MEDIA_URL = f'{AWS_S3_ENDPOINT_URL}/{PUBLIC_MEDIA_LOCATION}/'
+    DEFAULT_FILE_STORAGE = 'social_trader.storage_backends.PublicMediaStorage'
+else:
+    STATIC_URL = '/staticfiles/'
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    
+    MEDIA_URL = '/mediafiles/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.1/howto/static-files/
+# STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
-STATIC_URL = "/staticfiles/"
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles/")
-# STATICFILES_DIRS = (os.path.join(BASE_DIR, "staticfiles"),)
-
-MEDIA_URL = "/mediafiles/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
