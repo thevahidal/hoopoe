@@ -59,3 +59,8 @@ class OrganizationView(ModelViewSet):
             },
             status=status.HTTP_201_CREATED,
         )
+    
+    def get_queryset(self):
+        user = self.request.user
+        queryset = self.queryset.filter(user=user)
+        return queryset
