@@ -19,7 +19,7 @@ class Organization(models.Model):
     name = models.CharField(max_length=128)
     slug = models.CharField(max_length=128)
     active = models.BooleanField(default=True)
-    metadata = models.JSONField(default=dict)
+    metadata = models.JSONField(default=dict, blank=True)
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

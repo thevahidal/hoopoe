@@ -1,5 +1,9 @@
 from rest_framework import serializers
 
-class UpupaSerializer(serializers.Serializer):
-    message = serializers.CharField(max_length=200, required=True)
-    extra = serializers.DictField(required=False)
+from core.models import Upupa
+
+class UpupaSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Upupa
+        fields = ['uuid', 'message', 'extra', 'created_at']

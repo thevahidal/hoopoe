@@ -23,4 +23,9 @@ class OrganizationSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Organization
-        fields = ['name', 'user', ]
+        fields = ['uuid', 'name', 'user']
+        extra_kwargs = {
+            "uuid": {
+                "read_only": True,
+            }
+        }

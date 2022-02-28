@@ -13,10 +13,10 @@ class Upupa(models.Model):
     organization = models.ForeignKey(
         Organization, on_delete=models.CASCADE, related_name="upupas"
     )
-    message = models.TextField(null=True, blank=True)
-    extra = models.JSONField(default=dict)
+    message = models.CharField(max_length=200, null=True, blank=True)
+    extra = models.JSONField(default=dict, blank=True)
 
-    metadata = models.JSONField(default=dict)
+    metadata = models.JSONField(default=dict, blank=True)
     
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
