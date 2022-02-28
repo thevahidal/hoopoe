@@ -10,7 +10,7 @@ from rest_framework.permissions import AllowAny
 from users.models import OrganizationAPIKey
 from users.permissions import HasAPIKey
 
-from core.tasks import handle_send_upupa
+from core.tasks import handle_send_upupa, handle_store_upupa
 from core.serializers import UpupaSerializer
 
 class Timestamp(GenericViewSet):
@@ -55,6 +55,7 @@ class Upupa(GenericViewSet):
         }
 
         handle_send_upupa.delay(organization_id=organization.id, context=context)
+        handle_store_upupa.delay(organization_id=organization.id, context=context)
         
         return Response(
             {

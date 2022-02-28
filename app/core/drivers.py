@@ -2,13 +2,23 @@ import json
 
 from django.template.loader import render_to_string
 from django.core.mail import get_connection, EmailMultiAlternatives
-
 from django.conf import settings
 
 from decouple import config
 import telegram
 
+from core.models import Upupa
 
+# Creates a new upupa object in the database
+def db_driver(organization, context):
+    Upupa.objects.create(
+        organization=organization,
+        message=context.get("message"),
+        extra=context.get("extra"),
+    )
+
+
+# Sends an email to the recipients
 def email_driver(organization, context, driver):
 
     plain_version = "upupa_email_template.txt"
@@ -42,6 +52,7 @@ def email_driver(organization, context, driver):
         email.send()
 
 
+# Sends a telegram message to the recipients
 def telegram_driver(organization, context, driver):
     try:
         bot = telegram.Bot(token=config("TELEGRAM_API_KEY"))
