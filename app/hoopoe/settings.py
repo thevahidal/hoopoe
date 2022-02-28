@@ -36,8 +36,12 @@ SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", default=False, cast=bool)
 
 ALLOWED_HOSTS = config("DJANGO_ALLOWED_HOSTS", default="", cast=lambda v: v.split(" "))
-CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS", default="", cast=lambda v: v.split(" "))
-CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", default="", cast=lambda v: v.split(" "))
+CSRF_TRUSTED_ORIGINS = config(
+    "CSRF_TRUSTED_ORIGINS", default="", cast=lambda v: v.split(" ")
+)
+CORS_ALLOWED_ORIGINS = config(
+    "CORS_ALLOWED_ORIGINS", default="", cast=lambda v: v.split(" ")
+)
 
 # Application definition
 INSTALLED_APPS = [
@@ -47,17 +51,15 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     "rest_framework",
     "rest_framework.authtoken",
-
     "django_extensions",
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
     "rest_framework_api_key",
-    'corsheaders',
-    'storages',
-    
+    "corsheaders",
+    "drf_yasg",
+    "storages",
     "core.apps.CoreConfig",
     "users.apps.UsersConfig",
 ]
@@ -90,6 +92,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 WSGI_APPLICATION = "hoopoe.wsgi.application"
 
@@ -141,31 +144,31 @@ USE_I18N = True
 
 USE_TZ = True
 
-USE_S3 = config('USE_S3', default=False, cast=bool)
+USE_S3 = config("USE_S3", default=False, cast=bool)
 if USE_S3:
     # aws settings
-    AWS_ACCESS_KEY_ID = config('S3_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = config('S3_SECRET_ACCESS_KEY')
-    AWS_STORAGE_BUCKET_NAME = config('S3_STORAGE_BUCKET_NAME')
-    AWS_S3_ENDPOINT_URL = config('S3_ENDPOINT_URL')
+    AWS_ACCESS_KEY_ID = config("S3_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = config("S3_SECRET_ACCESS_KEY")
+    AWS_STORAGE_BUCKET_NAME = config("S3_STORAGE_BUCKET_NAME")
+    AWS_S3_ENDPOINT_URL = config("S3_ENDPOINT_URL")
     AWS_DEFAULT_ACL = None
-    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
-    
+    AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
+
     # s3 static settings
-    STATIC_LOCATION = 'static'
-    STATIC_URL = f'{AWS_S3_ENDPOINT_URL}/{STATIC_LOCATION}/'
-    STATICFILES_STORAGE = 'hoopoe.storage_backends.StaticStorage'
-    
+    STATIC_LOCATION = "static"
+    STATIC_URL = f"{AWS_S3_ENDPOINT_URL}/{STATIC_LOCATION}/"
+    STATICFILES_STORAGE = "hoopoe.storage_backends.StaticStorage"
+
     # s3 public media settings
-    PUBLIC_MEDIA_LOCATION = 'media'
-    MEDIA_URL = f'{AWS_S3_ENDPOINT_URL}/{PUBLIC_MEDIA_LOCATION}/'
-    DEFAULT_FILE_STORAGE = 'hoopoe.storage_backends.PublicMediaStorage'
+    PUBLIC_MEDIA_LOCATION = "media"
+    MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{PUBLIC_MEDIA_LOCATION}/"
+    DEFAULT_FILE_STORAGE = "hoopoe.storage_backends.PublicMediaStorage"
 else:
-    STATIC_URL = '/staticfiles/'
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-    
-    MEDIA_URL = '/mediafiles/'
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
+    STATIC_URL = "/staticfiles/"
+    STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+    MEDIA_URL = "/mediafiles/"
+    MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
 
 # STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
@@ -199,10 +202,13 @@ API_KEY_CUSTOM_HEADER = "HTTP_X_API_KEY"
 
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=5) if not DEBUG else datetime.timedelta(days=5),
-    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=1) if not DEBUG else datetime.timedelta(weeks=4),
+    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(minutes=5)
+    if not DEBUG
+    else datetime.timedelta(days=5),
+    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=1)
+    if not DEBUG
+    else datetime.timedelta(weeks=4),
 }
-
 
 
 # CELERY STUFF
@@ -228,7 +234,7 @@ CELERY_TIMEZONE = "Asia/Tehran"
 CELERY_TRANSPORT_OPTIONS = {
     "fanout_prefix": True,
     "fanout_patterns": True,
-    "socket_timeout": 10,        
+    "socket_timeout": 10,
     "visibility_timeout": 10,
 }
 
@@ -255,3 +261,10 @@ if SENTRY_DSN:
         release="hoopoe-core@latest",
         send_default_pii=True,
     )
+
+SWAGGER_SETTINGS = {
+    "SECURITY_DEFINITIONS": {
+        "Token": {"type": "apiKey", "name": "Authorization", "in": "header"},
+        "API Key": {"type": "apiKey", "name": "X-API-KEY", "in": "header"},
+    }
+}
