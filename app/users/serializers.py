@@ -3,27 +3,77 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
-from users.models import Organization
+from rest_framework_simplejwt.serializers import (
+    TokenObtainPairSerializer as BaseTokenObtainPairSerializer,
+)
 
-class RegisterSerializer(serializers.ModelSerializer):
-    
+from users.models import Organization, UserProfile
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    image_thumbnail = serializers.ImageField(read_only=True)
+
+    class Meta:
+        model = UserProfile
+        fields = [
+            "image_thumbnail",
+        ]
+
+
+class UserSerializer(serializers.ModelSerializer):
+    profile = UserProfileSerializer(read_only=True)
+
     class Meta:
         model = User
-        fields = ['email', 'username', 'password', ]
+        fields = [
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            
+            "profile",
+        ]
+
+
+class TokenObtainPairSerializer(BaseTokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Add custom claims
+        token["user"] = UserSerializer(user).data
+
+        return token
+
+
+class RegisterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = [
+            "email",
+            "username",
+            "password",
+        ]
         extra_kwargs = {
             "email": {
                 "required": True,
-                "validators": [UniqueValidator(queryset=User.objects.all(), message="A user with that email already exists.")]
+                "validators": [
+                    UniqueValidator(
+                        queryset=User.objects.all(),
+                        message="A user with that email already exists.",
+                    )
+                ],
             }
         }
-        
+
 
 class OrganizationSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    
+    image_thumbnail = serializers.ImageField(read_only=True)
+
     class Meta:
         model = Organization
-        fields = ['uuid', 'name', 'user']
+        fields = ["uuid", "name", "user", "is_personal", "image_thumbnail"]
         extra_kwargs = {
             "uuid": {
                 "read_only": True,

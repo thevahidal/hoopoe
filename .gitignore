@@ -130,3 +130,6 @@ dmypy.json
 .pyre/
 
 app/celerybeat-schedule
+
+mediafiles/
+staticfiles/

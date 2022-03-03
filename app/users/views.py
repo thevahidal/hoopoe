@@ -6,8 +6,20 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 
 from users.models import Organization, OrganizationAPIKey
-from users.serializers import OrganizationSerializer, RegisterSerializer
+from users.serializers import (
+    OrganizationSerializer,
+    RegisterSerializer,
+    TokenObtainPairSerializer,
+)
 from users.utils import get_tokens_for_user
+
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView as BaseTokenObtainPairView,
+)
+
+
+class TokenObtainPairView(BaseTokenObtainPairView):
+    serializer_class = TokenObtainPairSerializer
 
 
 class RegisterView(ModelViewSet):
@@ -27,10 +39,19 @@ class RegisterView(ModelViewSet):
         user.set_password(password)
         user.save()
 
+        organization = Organization.objects.create(user=user, is_personal=True)
+
         token = get_tokens_for_user(user)
 
         return Response(
-            {"error": None, "message": "User successfully created.", "data": {**token}}
+            {
+                "error": None,
+                "message": "User successfully created.",
+                "data": {
+                    **token,
+                    "organization": OrganizationSerializer(organization).data,
+                },
+            },
         )
 
 
@@ -59,7 +80,7 @@ class OrganizationView(ModelViewSet):
             },
             status=status.HTTP_201_CREATED,
         )
-    
+
     def get_queryset(self):
         user = self.request.user
         queryset = self.queryset.filter(user=user)

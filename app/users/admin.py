@@ -2,7 +2,17 @@ from django.contrib import admin
 
 from rest_framework_api_key.admin import APIKeyModelAdmin
 
-from users.models import Driver, Organization, OrganizationAPIKey, Recipient
+from users.models import Driver, Organization, OrganizationAPIKey, Recipient, UserProfile
+
+
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    readonly_fields = ["created_at", "updated_at"]
+    list_display = [
+        "user",
+        "created_at",
+    ]
+    list_filter = []
 
 
 @admin.register(OrganizationAPIKey)
@@ -17,6 +27,7 @@ class OrganizationAdmin(admin.ModelAdmin):
         "user",
         "name",
         "slug",
+        "is_personal",
         "created_at",
     ]
     list_filter = []
