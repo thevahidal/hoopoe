@@ -122,7 +122,7 @@ There are two ways to deploy Hoopoe:
 
 1. Using docker image **(Recommended)**
     - Either build your own docker image using the Dockerfile
-    - Or using the latest image on [Dockerhub](https://hub.docker.com/thevahidal/hoopoe-core)
+    - Or using the latest image on [Dockerhub](https://hub.docker.com/r/thevahidal/hoopoe)
 2. Manual deployment, you can use [this awesome article by Digitalocean](https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu-20-04) on how to deploy a django project to production environment
     - Please make sure to serve your deployment over HTTPS (Important)
     - This project is actively updating, make sure to update your deployment often
