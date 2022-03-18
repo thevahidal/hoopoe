@@ -55,7 +55,7 @@ As you already know the only thing that we always carry around is our phones, so
 ```python
     # In your code...
     if that_thing_happened:
-        hoopoe.call("The thing that we don't like happened!", extra={
+        hoopoe.upupa("The thing that we don't like happened!", extra={
             "where": "Alex's House",
             "type": "Cops",
             "how_bad": "4/5"
@@ -82,18 +82,18 @@ As you already know the only thing that we always carry around is our phones, so
 Key features of **Hoopoe**:
 - Instant notifications
 - Support for email
-- Support for popular messengers (Coming Soon!)
-    - Whatsapp
+- Support for popular messengers
     - Telegram
-    - Slack
+    - Whatsapp (Coming Soon!)
+    - Slack (Coming Soon!)
     - ...
 
-- Lots of SDKs (Coming Soon!)
+- Lots of SDKs
     - Python
     - Javascript
     - ...
 
-- Cloud (Coming Soon!) and on-premise 
+- [Cloud](https://hoopoe.app) and on-premise 
 
 <details open>
 <summary>Why Hoopoe? The story behind the name.</summary>
@@ -108,11 +108,11 @@ Looking for a name that's both beautiful and meaningful, I started to google for
 
 ### Prerequisites
 
-The recommended way to use **Hoopoe** is by using [Hoopoe.app](https://hoopoe.app) which take away the pain of deploying and maintaining Hoopoe on your own (Coming Soon!). For manual usage please refer to [manual setup section](#manual-setup).
+The recommended way to use **Hoopoe** is by using [Hoopoe.app](https://hoopoe.app) which take away the pain of deploying and maintaining Hoopoe on your own. For manual usage please refer to [manual setup section](#manual-setup).
 
 ### Cloud vs. On-premise
 
-Hoopoe core is a RESTful API. Either you're using the Hoopoe.app or your own deployment, you can refer to [API docs (Coming Soon!)](https://docs.hoopoe.app) to read more about APIs.
+Hoopoe core is a RESTful API. Either you're using the Hoopoe.app or your own deployment, you can refer to [API docs](https://api.hoopoe.app/docs/) to read more about APIs.
 
 <!-- ![Preview](docs/images/preview.svg) -->
 
@@ -120,9 +120,9 @@ Hoopoe core is a RESTful API. Either you're using the Hoopoe.app or your own dep
 
 There are two ways to deploy Hoopoe:
 
-1. Using docker image **(Recommended)** (Coming Soon!)
+1. Using docker image **(Recommended)**
     - Either build your own docker image using the Dockerfile
-    - Or using the latest image on [Dockerhub (Coming Soon!)](https://hub.docker.com/thevahidal/hoopoe-core)
+    - Or using the latest image on [Dockerhub](https://hub.docker.com/r/thevahidal/hoopoe)
 2. Manual deployment, you can use [this awesome article by Digitalocean](https://www.digitalocean.com/community/tutorials/how-to-set-up-django-with-postgres-nginx-and-gunicorn-on-ubuntu-20-04) on how to deploy a django project to production environment
     - Please make sure to serve your deployment over HTTPS (Important)
     - This project is actively updating, make sure to update your deployment often
@@ -166,13 +166,13 @@ As mentioned in manual setup section, you need to duplicate ```.env_```, rename 
 
 See the [open issues](https://github.com/thevahidal/hoopoe-core/issues) for a list of proposed features (and known issues).
 
-- Lots of SDKs
-    - Python
-    - Javascript
-    - Cli
+- Lot more SDKs
+    - CLI
+    - Java
+    - Go
+    - PHP
     - ...
 - Support for popular messengers
-    - Telegram
     - Whatsapp
     - Slack
     ...
