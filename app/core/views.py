@@ -70,7 +70,7 @@ class SendUpupaView(ModelViewSet):
 class UpupaView(ModelViewSet):
     serializer_class = UpupaSerializer
     permission_classes = [IsAuthenticated]
-    lookup_field = "uuid"
+    lookup_field = "organization_uuid"
 
     def get_queryset(self):
         user = self.request.user

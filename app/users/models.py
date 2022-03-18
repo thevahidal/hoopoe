@@ -88,6 +88,16 @@ class Recipient(models.Model):
     username = models.CharField(max_length=128)
     active = models.BooleanField(default=True)
 
+    image = models.ImageField(
+        upload_to="photos/users/recipients/%y/%m/%d/", blank=True, null=True
+    )
+    image_thumbnail = ImageSpecField(
+        source="image",
+        processors=[ResizeToFit(width=100, upscale=False)],
+        format="JPEG",
+        options={"quality": 60},
+    )
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

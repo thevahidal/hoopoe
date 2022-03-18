@@ -7,7 +7,7 @@ from rest_framework_simplejwt.serializers import (
     TokenObtainPairSerializer as BaseTokenObtainPairSerializer,
 )
 
-from users.models import Organization, UserProfile
+from users.models import Driver, Organization, Recipient, UserProfile
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -67,7 +67,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         }
 
 
-class OrganizationSerializer(serializers.ModelSerializer):
+class OrganizationsSerializer(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     image_thumbnail = serializers.ImageField(read_only=True)
 
@@ -79,3 +79,20 @@ class OrganizationSerializer(serializers.ModelSerializer):
                 "read_only": True,
             }
         }
+
+
+
+class DriversSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Driver
+        fields = ["type", "account_id", "active", "created_at", "updated_at"]
+
+
+class RecipientsSerializer(serializers.ModelSerializer):
+    drivers = DriversSerializer(many=True)
+    image_thumbnail = serializers.ImageField(read_only=True)
+    
+    class Meta:
+        model = Recipient
+        fields = ["username", "image_thumbnail", "name", "organization", "drivers", "active", "created_at", "updated_at"]

@@ -3,7 +3,7 @@ from django.urls import path
 from core.views import SendUpupaView, TimestampView, UpupaView
 
 urlpatterns = [
-    path('organizations/<str:uuid>/upupa/', UpupaView.as_view({
+    path('organizations/<str:organization_uuid>/upupa/', UpupaView.as_view({
         "get": "list",
     }), name='upupa'),
     path('upupa/<str:uuid>/', UpupaView.as_view({
