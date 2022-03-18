@@ -55,7 +55,7 @@ As you already know the only thing that we always carry around is our phones, so
 ```python
     # In your code...
     if that_thing_happened:
-        hoopoe.call("The thing that we don't like happened!", extra={
+        hoopoe.upupa("The thing that we don't like happened!", extra={
             "where": "Alex's House",
             "type": "Cops",
             "how_bad": "4/5"
