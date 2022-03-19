@@ -17,7 +17,9 @@ RUN apk update \
     && apk add postgresql-dev gcc python3-dev musl-dev
 
 # Pillow dependencies
-RUN apk add --no-cache jpeg-dev zlib-dev
+RUN apk add --no-cache jpeg-dev zlib-dev \
+    && pip install pillow
+
 
 # lint
 RUN pip install --upgrade pip
