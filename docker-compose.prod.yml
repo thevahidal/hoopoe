@@ -4,88 +4,39 @@ services:
   app:
     image: "thevahidal/hoopoe:${TAG}"
     command: gunicorn hoopoe.wsgi:application --bind 0.0.0.0:8000
-    volumes:
-      - static_volume:/home/app/web/staticfiles
-      - media_volume:/home/app/web/mediafiles
     ports:
       - 8000:8000
     env_file:
       - .env.prod
-    depends_on:
-      - db
-    networks:
-      - local
-
-  db:
-    image: postgres:13.0-alpine
-    hostname: db
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-    env_file:
-      - .env.prod
-    networks:
-      - local
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   celery:
     image: "thevahidal/hoopoe:${TAG}"
     command: /bin/sh -c "/home/app/web/entrypoint.prod.celery.sh"
     restart: on-failure
-    volumes:
-      - static_volume:/home/app/web/staticfiles
-      - media_volume:/home/app/web/mediafiles
     env_file:
       - .env.prod
-    depends_on:
-      - db
-      - redis
-    networks:
-      - local
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   celery-beat:
     image: "thevahidal/hoopoe:${TAG}"
     command: /bin/sh -c "/home/app/web/entrypoint.prod.beat.sh"
     restart: on-failure
-    volumes:
-      - static_volume:/home/app/web/staticfiles
-      - media_volume:/home/app/web/mediafiles
     env_file:
       - .env.prod
-    depends_on:
-      - db
-      - redis
-    networks:
-      - local
-  
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
   telegram-client:
     image: "thevahidal/hoopoe:${TAG}"
     command: /bin/sh -c "/home/app/web/entrypoint.prod.telegram.sh"
     restart: on-failure
-    volumes:
-      - static_volume:/home/app/web/staticfiles
-      - media_volume:/home/app/web/mediafiles
     env_file:
       - .env.prod
     depends_on:
       - app
-    networks:
-      - local
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
-  redis:
-    restart: always
-    image: redis:latest
-    ports:
-      - "6379"
-    volumes:
-      - redis_data:/data
-    networks:
-      - local
-
-volumes:
-  postgres_data:
-  redis_data:
-  static_volume:
-  media_volume:
-
-
-networks:
-  local:
