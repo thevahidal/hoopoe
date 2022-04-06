@@ -17,6 +17,8 @@ services:
     restart: on-failure
     env_file:
       - .env.prod
+    depends_on:
+      - redis
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
@@ -26,6 +28,8 @@ services:
     restart: on-failure
     env_file:
       - .env.prod
+    depends_on:
+      - redis
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
@@ -40,3 +44,15 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
+  redis:
+    restart: always
+    image: redis:6.2
+    ports:
+      - "6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - local
+
+volumes:
+  redis_data:
