@@ -10,7 +10,4 @@ echo "PostgreSQL started"
 python manage.py migrate
 python manage.py collectstatic --noinput
 
-python manage.py init_telegram_client
-echo "Telegram client started"
-
 exec "$@"
