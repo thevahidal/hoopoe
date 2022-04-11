@@ -19,6 +19,7 @@ services:
       - .env.prod
     depends_on:
       - redis
+      - app
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
@@ -30,6 +31,7 @@ services:
       - .env.prod
     depends_on:
       - redis
+      - app
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
@@ -51,8 +53,6 @@ services:
       - "6379"
     volumes:
       - redis_data:/data
-    networks:
-      - local
 
 volumes:
   redis_data:
