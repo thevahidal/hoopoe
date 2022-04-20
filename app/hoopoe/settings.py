@@ -221,8 +221,7 @@ SIMPLE_JWT = {
 # CELERY STUFF
 REDIS_HOST = config("REDIS_HOST", default="localhost")
 REDIS_PORT = config("REDIS_PORT", default=6379, cast=int)
-REDIS_PASSWORD = config("REDIS_PASSWORD", default="")
-REDIS_BROKER_URL = f"redis://:{REDIS_PASSWORD}@{REDIS_HOST}:{REDIS_PORT}/0"
+REDIS_BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"
 
 CACHES = {
     "default": {
