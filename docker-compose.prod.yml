@@ -8,8 +8,7 @@ services:
       - 8000:8000
     env_file:
       - .env.prod
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    network_mode: host
 
   celery:
     image: "thevahidal/hoopoe:${TAG}"
@@ -20,8 +19,7 @@ services:
     depends_on:
       - redis
       - app
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    network_mode: host
 
   celery-beat:
     image: "thevahidal/hoopoe:${TAG}"
@@ -32,8 +30,7 @@ services:
     depends_on:
       - redis
       - app
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    network_mode: host
 
   telegram-client:
     image: "thevahidal/hoopoe:${TAG}"
@@ -43,16 +40,7 @@ services:
       - .env.prod
     depends_on:
       - app
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-
-  redis:
-    restart: always
-    image: redis:6.2
-    ports:
-      - "6379"
-    volumes:
-      - redis_data:/data
+    network_mode: host
 
 volumes:
   redis_data:
