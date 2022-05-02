@@ -64,7 +64,7 @@ def telegram_driver(organization, context, driver):
             **Message**
             {context.get('message')}
             **Info**
-            {json.dumps(context.get('extra'), indent=4, sort_keys=True)}
+            {json.dumps(context.get('extra'), indent=4, sort_keys=True, ensure_ascii=False)}
             """,
         )
     except:
