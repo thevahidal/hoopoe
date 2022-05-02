@@ -53,7 +53,6 @@ def email_driver(organization, context, driver):
         email.send()
 
 
-
 # Sends a telegram message to the recipients
 def telegram_driver(organization, context, driver):
     try:
