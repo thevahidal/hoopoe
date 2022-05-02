@@ -7,6 +7,7 @@ from django.conf import settings
 from decouple import config
 import telegram
 
+from core.utils import generate_telegram_message
 from core.models import Upupa
 
 # Creates a new upupa object in the database
@@ -52,20 +53,14 @@ def email_driver(organization, context, driver):
         email.send()
 
 
+
 # Sends a telegram message to the recipients
 def telegram_driver(organization, context, driver):
     try:
         bot = telegram.Bot(token=config("TELEGRAM_API_KEY"))
         bot.send_message(
             chat_id=driver.account_id,
-            text=f"""
-            **When**
-            {context.get('timestamp')}
-            **Message**
-            {context.get('message')}
-            **Info**
-            {json.dumps(context.get('extra'), indent=4, sort_keys=True, ensure_ascii=False)}
-            """,
+            text=generate_telegram_message(organization, context),
         )
     except:
         print("Telegram driver failed.")
