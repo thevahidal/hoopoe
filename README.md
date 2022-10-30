@@ -88,7 +88,7 @@ Key features of **Hoopoe**:
     - Slack (Coming Soon!)
     - ...
 
-- Lots of SDKs
+- Different SDKs
     - Python
     - Javascript
     - ...
